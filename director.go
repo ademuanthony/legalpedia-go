@@ -1,0 +1,28 @@
+package main
+
+import (
+	"context"
+
+	"github.com/ademuanthony/legalpedia/homepage"
+	"github.com/ademuanthony/legalpedia/postgres"
+	"github.com/ademuanthony/legalpedia/web"
+)
+
+func setupModules(ctx context.Context, cfg *config, server *web.Server) error {
+	var err error
+
+	pgDb, err := postgres.NewPgDb(cfg.DBHost, cfg.DBPort, cfg.DBUser, cfg.DBPass, cfg.DBName, cfg.DebugLevel == "debug")
+	if err != nil {
+		return err
+	}
+	if err = pgDb.CreateTables(ctx); err != nil {
+		log.Error("Error creating tables: ", err)
+		return err
+	}
+
+	_, err = homepage.New(server)
+	if err != nil {
+		log.Error(err)
+	}
+	return nil
+}
