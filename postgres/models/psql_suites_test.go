@@ -86,8 +86,6 @@ func TestUpsert(t *testing.T) {
 
 	t.Run("Teams", testTeamsUpsert)
 
-	t.Run("UpdateMetas", testUpdateMetasUpsert)
-
 	t.Run("UserPictures", testUserPicturesUpsert)
 
 	t.Run("Articles", testArticlesUpsert)

@@ -44,7 +44,6 @@ var TableNames = struct {
 	TeamLogos             string
 	TeamMembers           string
 	Teams                 string
-	UpdateMetas           string
 	UserPictures          string
 	Articles              string
 	Dictionary            string
@@ -97,7 +96,6 @@ var TableNames = struct {
 	TeamLogos:             "TeamLogos",
 	TeamMembers:           "TeamMembers",
 	Teams:                 "Teams",
-	UpdateMetas:           "UpdateMetas",
 	UserPictures:          "UserPictures",
 	Articles:              "articles",
 	Dictionary:            "dictionary",

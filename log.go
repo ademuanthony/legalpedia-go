@@ -5,6 +5,7 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/ademuanthony/legalpedia/article"
 	"github.com/ademuanthony/legalpedia/homepage"
 	"github.com/ademuanthony/legalpedia/postgres"
 	"github.com/ademuanthony/legalpedia/web"
@@ -40,11 +41,12 @@ var (
 	// application shutdown.
 	logRotator *rotator.Rotator
 
-	log              = backendLog.Logger("PDAN")
-	homeLog          = backendLog.Logger(("HOME"))
-	psqlLog          = backendLog.Logger("PSQL")
-	chartLog         = backendLog.Logger("CHRT")
-	webLogger        = backendLog.Logger("WEBL")
+	log        = backendLog.Logger("PDAN")
+	homeLog    = backendLog.Logger(("HOME"))
+	psqlLog    = backendLog.Logger("PSQL")
+	chartLog   = backendLog.Logger("CHRT")
+	webLogger  = backendLog.Logger("WEBL")
+	articleLog = backendLog.Logger("ATCL")
 )
 
 // Initialize package-global logger variables.
@@ -52,6 +54,7 @@ func init() {
 	homepage.UseLogger(homeLog)
 	postgres.UseLogger(psqlLog)
 	web.UseLogger(webLogger)
+	article.UseLogger(articleLog)
 }
 
 // subsystemLoggers maps each subsystem identifier to its associated logger.
@@ -60,6 +63,7 @@ var subsystemLoggers = map[string]slog.Logger{
 	"HOME": homeLog,
 	"WEBL": webLogger,
 	"PSQL": psqlLog,
+	"ATCL": articleLog,
 }
 
 // initLogRotator initializes the logging rotater to write logs to logFile and

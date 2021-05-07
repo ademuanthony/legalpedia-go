@@ -3,7 +3,7 @@ package web
 type contextKey int
 
 const (
-	CtxXcToken contextKey = iota
+	CtxIDParam contextKey = iota
 	CtxChartDataType
 	CtxTimestamp
 	CtxProposalRefID

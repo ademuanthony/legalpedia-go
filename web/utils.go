@@ -14,13 +14,13 @@ import (
 )
 
 const (
-	retryDelay                  = 60 * time.Second
-	maxRetryAttempts            = 3
-	ChartViewOption             = "chart"
-	DefaultViewOption           = ChartViewOption
-	MaxPageSize                 = 250
-	DefaultPageSize             = 20
-	NoDataMessage               = "does not have data for the selected query option(s)."
+	retryDelay        = 60 * time.Second
+	maxRetryAttempts  = 3
+	ChartViewOption   = "chart"
+	DefaultViewOption = ChartViewOption
+	MaxPageSize       = 250
+	DefaultPageSize   = 20
+	NoDataMessage     = "does not have data for the selected query option(s)."
 )
 
 var (
@@ -207,4 +207,59 @@ func (s *Server) StatusPage(w http.ResponseWriter, r *http.Request, code, messag
 		w.WriteHeader(http.StatusServiceUnavailable)
 	}
 	io.WriteString(w, str)
+}
+
+func GetPanitionInfo(r *http.Request) PagedResultRequest {
+	page, _ := strconv.Atoi(r.FormValue("page"))
+	if page < 1 {
+		page = 1
+	}
+
+	pageSize, _ := strconv.Atoi(r.FormValue("limit"))
+	if pageSize < 1 {
+		pageSize = DefaultPageSize
+	}
+
+	offset := (page - 1) * pageSize
+
+	return PagedResultRequest{
+		Limit:    pageSize,
+		Offset:   offset,
+		Page:     int64(page),
+		PageSize: int64(pageSize),
+	}
+}
+
+// Pagination
+type PageInfo struct {
+	Current int64
+	Count   int64
+	IsFirst bool
+	IsLast  bool
+
+	PrevLink string
+	NextLink string
+}
+
+func PaginationResponseInfo(totalCount, current, pageSize int64, urlParams map[string]interface{}) PageInfo {
+	count := totalCount / pageSize
+	if count*pageSize < totalCount {
+		count += 1
+	}
+
+	buildQuery := func(page int64) string {
+		var qs = []string{fmt.Sprintf("page=%d", page)}
+		for k, v := range urlParams {
+			qs = append(qs, fmt.Sprintf("%s=%v", k, v))
+		}
+		return strings.Join(qs, "&")
+	}
+	return PageInfo{
+		Current:  current,
+		Count:    count,
+		IsFirst:  current <= 1,
+		IsLast:   current >= count,
+		PrevLink: "?" + buildQuery(current-1),
+		NextLink: "?" + buildQuery(current+1),
+	}
 }

@@ -1,7 +1,9 @@
 package web
 
 import (
+	"fmt"
 	"net/http"
+	"strings"
 
 	"github.com/go-chi/chi"
 )
@@ -27,6 +29,19 @@ type route struct {
 }
 
 func (s *Server) AddRoute(path string, method method, handlerFunc http.HandlerFunc, middleware ...func(next http.Handler) http.Handler) {
+	if _, found := s.routes[path]; found {
+		panic("duplicate route")
+	}
+	s.routes[path] = route{
+		path, method, handlerFunc, middleware,
+	}
+}
+
+// AddAPIRoute creates a route where the path is preppended with /api/services/app
+func (s *Server) AddAPIRoute(path string, method method, handlerFunc http.HandlerFunc, middleware ...func(next http.Handler) http.Handler) {
+	path = strings.TrimPrefix(path, "/api/services/app/")
+	path = strings.TrimPrefix(path, "/")
+	path = fmt.Sprintf("/api/services/app/%s", path)
 	if _, found := s.routes[path]; found {
 		panic("duplicate route")
 	}

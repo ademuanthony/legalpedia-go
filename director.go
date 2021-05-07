@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 
+	"github.com/ademuanthony/legalpedia/article"
 	"github.com/ademuanthony/legalpedia/homepage"
 	"github.com/ademuanthony/legalpedia/postgres"
 	"github.com/ademuanthony/legalpedia/web"
@@ -23,6 +24,12 @@ func setupModules(ctx context.Context, cfg *config, server *web.Server) error {
 	_, err = homepage.New(server)
 	if err != nil {
 		log.Error(err)
+		return err
+	}
+
+	if err = article.Activate(ctx, pgDb, server); err != nil {
+		log.Error(err)
+		return err
 	}
 	return nil
 }

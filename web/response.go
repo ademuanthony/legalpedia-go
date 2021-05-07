@@ -9,15 +9,41 @@ import (
 )
 
 func RenderErrorfJSON(res http.ResponseWriter, errorMessage string, args ...interface{}) {
-	data := map[string]interface{}{
-		"error": fmt.Sprintf(errorMessage, args...),
+	var response = struct {
+		Success             bool        `json:"success"`
+		Result              interface{} `json:"result"`
+		UnAuthorizedRequest bool        `json:"unAuthorizedRequest"`
+		Error               interface{} `json:"error"`
+	}{
+		Success:             false,
+		Result:              nil,
+		UnAuthorizedRequest: false,
+		Error:               fmt.Sprintf(errorMessage, args...),
 	}
 
-	RenderJSON(res, data)
+	d, err := json.Marshal(response)
+	if err != nil {
+		log.Errorf("Error marshalling data: %s", err.Error())
+	}
+
+	res.Header().Set("Content-Type", "application/json")
+	_, _ = res.Write(d)
 }
 
 func RenderJSON(res http.ResponseWriter, data interface{}) {
-	d, err := json.Marshal(data)
+	var response = struct {
+		Success             bool        `json:"success"`
+		Result              interface{} `json:"result"`
+		UnAuthorizedRequest bool        `json:"unAuthorizedRequest"`
+		Error               interface{} `json:"error"`
+	}{
+		Success:             true,
+		Result:              data,
+		UnAuthorizedRequest: false,
+		Error:               nil,
+	}
+
+	d, err := json.Marshal(response)
 	if err != nil {
 		log.Errorf("Error marshalling data: %s", err.Error())
 	}
