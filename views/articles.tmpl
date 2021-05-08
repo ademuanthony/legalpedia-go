@@ -70,7 +70,7 @@
                                     {{ range $art := .Articles }}
                                     <div class="judgement-list">
                                         <p class="caseTitle">
-                                            <a href="/Articles/{{ $art.UUID }}">{{ $art.Title }}</a>
+                                            <a href="/articles/{{ trim $art.UUID }}">{{ $art.Title }}</a>
                                         </p>
                                         <hr style="color:lightgray" />
                                     </div>

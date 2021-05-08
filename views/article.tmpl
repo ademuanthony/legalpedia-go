@@ -16,11 +16,12 @@
                 <div class="row align-items-center">
                     <div class="col-md-12">
                         <div class="page-header-title">
-                            <h5 class="m-b-10">Legal Articles</h5>
+                            <h5 class="m-b-10">{{ .Article.Title }}</h5>
                         </div>
                         <ul class="breadcrumb">
                             <li class="breadcrumb-item"><a href="/"><i class="feather icon-home"></i></a></li>
-                            <li class="breadcrumb-item"><a href="#!">Articles</a></li>
+                            <li class="breadcrumb-item"><a href="/articles">Articles</a></li>
+                            <li class="breadcrumb-item"><a href="#!">Read</a></li>
                         </ul>
                     </div>
                 </div>
@@ -32,52 +33,12 @@
         <div class="row clearfix" data-controller="article">
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                 <div class="card">
-                    <div class="card-header">
-                        <p class="header-dropdown m-r--5" data-target="article.paginationWrapper">
-                            Showing page <span data-target="article.currentPage"></span> of
-                            <span data-target="article.totalPages"></span> page(s)
-                            <button class="btn btn-danger btn-xm d-none" data-action="click->article#previousPage"
-                                data-target="article.previousButton">Previous</button>
-                            <button class="btn btn-danger btn-xm d-none" data-action="click->article#nextPage"
-                                data-target="article.nextButton">Next</button>
-                        </p>
-                    </div>
                     <div class="card-body">
                         <div class="row">
                             <div class="col-md-12">
-                                <div class="case-filter" data-target="article.caseFilterWrapper">
-
-                                    <div class="row">
-                                        <div class="col-md-5">
-                                            <div class="form-group">
-                                                <label for="inputEmail3" class="col-sm-2 control-label">Filter</label>
-                                                <div class="col-sm-10">
-                                                    <input type="text" placeholder="Title" class="form-control"
-                                                        data-target="article.title" />
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-2">
-                                            <button data-action="click->article#search" type="button"
-                                                class="btn-danger btn">Search</button>
-                                        </div>
-                                    </div>
-                                </div>
+                                {{ rawHTML .Article.Content }}
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div data-target="article.body"></div>
-                                <p class="text-danger" data-target="article.noResult"></p>
-                            </div>
-                        </div>
-
-                        <template data-target="article.itemTemplate">
-                            <div class="judgement-list">
-                                <p class="caseTitle"></p>
-                                <hr style="color:lightgray" />
-                            </div>
-                        </template>
                     </div>
                 </div>
             </div>

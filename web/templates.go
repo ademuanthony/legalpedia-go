@@ -272,6 +272,9 @@ func MakeTemplateFuncMap(params *chaincfg.Params) template.FuncMap {
 	netTheme := "theme-" + strings.ToLower(netName(params))
 
 	return template.FuncMap{
+		"rawHTML": func (input string) template.HTML {
+			return template.HTML(input)
+		},
 		"add": func(args ...int64) int64 {
 			var sum int64
 			for _, a := range args {
@@ -303,8 +306,8 @@ func MakeTemplateFuncMap(params *chaincfg.Params) template.FuncMap {
 		"theme": func() string {
 			return netTheme
 		},
-		"hashlink": func(hash string, link string) [2]string {
-			return [2]string{hash, link}
+		"trim": func(input string) string {
+			return strings.Trim(input, " ")
 		},
 		"hashStart": func(hash string) string {
 			clipLen := 6

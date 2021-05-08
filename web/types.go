@@ -44,7 +44,10 @@ type MenuItem struct {
 	Href       string
 	HyperText  string
 	Info       string
+	Icon       string
 	Attributes map[string]string
+
+	Submenus []MenuItem
 }
 
 type BreadcrumbItem struct {

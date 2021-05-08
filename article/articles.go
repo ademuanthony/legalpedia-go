@@ -23,7 +23,7 @@ func (m *module) setupHttpRoutes(ctx context.Context) error {
 
 	// page routes
 	m.server.AddRoute("/articles", web.GET, m.articlesPage)
-	m.server.AddRoute("/articles/:id", web.GET, m.articlePage)
+	m.server.AddRoute("/articles/{id}", web.GET, m.articlePage, web.IDParamCtx)
 
 	// api routes
 	m.server.AddAPIRoute("articles/Filter", web.GET, m.articlesEndpoint)
@@ -32,6 +32,7 @@ func (m *module) setupHttpRoutes(ctx context.Context) error {
 		Href:      "/articles",
 		HyperText: "Articles",
 		Info:      "Artcles",
+		Icon:      "feather icon-package",
 	})
 
 	return nil
