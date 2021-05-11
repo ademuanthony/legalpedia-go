@@ -6,6 +6,7 @@ import (
 	"github.com/ademuanthony/legalpedia/article"
 	"github.com/ademuanthony/legalpedia/homepage"
 	"github.com/ademuanthony/legalpedia/postgres"
+	"github.com/ademuanthony/legalpedia/rulesofcourt"
 	"github.com/ademuanthony/legalpedia/web"
 )
 
@@ -28,6 +29,11 @@ func setupModules(ctx context.Context, cfg *config, server *web.Server) error {
 	}
 
 	if err = article.Activate(ctx, pgDb, server); err != nil {
+		log.Error(err)
+		return err
+	}
+
+	if err = rulesofcourt.Activate(ctx, pgDb, server); err != nil {
 		log.Error(err)
 		return err
 	}

@@ -8,6 +8,7 @@ import (
 	"github.com/ademuanthony/legalpedia/article"
 	"github.com/ademuanthony/legalpedia/homepage"
 	"github.com/ademuanthony/legalpedia/postgres"
+	"github.com/ademuanthony/legalpedia/rulesofcourt"
 	"github.com/ademuanthony/legalpedia/web"
 	"github.com/decred/slog"
 	"github.com/jrick/logrotate/rotator"
@@ -47,6 +48,7 @@ var (
 	chartLog   = backendLog.Logger("CHRT")
 	webLogger  = backendLog.Logger("WEBL")
 	articleLog = backendLog.Logger("ATCL")
+	ruleLog    = backendLog.Logger("RULE")
 )
 
 // Initialize package-global logger variables.
@@ -55,6 +57,7 @@ func init() {
 	postgres.UseLogger(psqlLog)
 	web.UseLogger(webLogger)
 	article.UseLogger(articleLog)
+	rulesofcourt.UseLogger(ruleLog)
 }
 
 // subsystemLoggers maps each subsystem identifier to its associated logger.
@@ -64,6 +67,7 @@ var subsystemLoggers = map[string]slog.Logger{
 	"WEBL": webLogger,
 	"PSQL": psqlLog,
 	"ATCL": articleLog,
+	"RULE": ruleLog,
 }
 
 // initLogRotator initializes the logging rotater to write logs to logFile and

@@ -51,7 +51,6 @@ func (m *PgDb) FetchArticles(ctx context.Context, req web.PagedResultRequest, te
 }
 
 func (m *PgDb) FindByID(ctx context.Context, uuid string) (*article.Article, error) {
-	log.Info(uuid)
 	art, err := models.FindArticle(ctx, m.db, uuid)
 	if err != nil {
 		return nil, err

@@ -1,0 +1,112 @@
+{{define "rules/state"}}
+<!DOCTYPE html>
+<html lang="en">
+{{ template "html-head" printf "Rules Of Court"}}
+
+{{template "navbar" . }}
+{{template "header" . }}
+
+
+<!-- [ Main Content ] start -->
+<div class="pcoded-main-container">
+    <div class="pcoded-content">
+        <!-- [ breadcrumb ] start -->
+        <div class="page-header">
+            <div class="page-block">
+                <div class="row align-items-center">
+                    <div class="col-md-12">
+                        <div class="page-header-title">
+                            <h5 class="m-b-10" data-target="article.listTitle">Rules of Court</h5>
+                        </div>
+                        <ul class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="/"><i class="feather icon-home"></i></a></li>
+                            <li class="breadcrumb-item"><a href="#!">Rules of Court</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- [ breadcrumb ] end -->
+        <!-- [ Main Content ] start -->
+
+        <div class="row clearfix" data-controller="article">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="row">
+                            <div class="col-md-6 col-sm-12">
+                                <form class="form-inline">
+                                    <div class="input-group mb-2 mr-sm-2">
+                                        <div class="input-group-prepend">
+                                            <div class="input-group-text">Select</div>
+                                        </div>
+                                        <select name="state" class="form-control"
+                                            data-action="change->rules#stateChanged" data-filter-is-by="state"
+                                            data-target="rules.state" data-initial-value="{{ .State }}">
+                                            {{ $selectedState := .State }}
+                                            {{ range $state := .States }}
+                                            <option {{ if eq $state $selectedState }} selected {{ end }}>{{ $state }}
+                                            </option>
+                                            {{ end }}
+                                        </select>
+                                    </div>
+
+                                    <button type="submit" class="btn btn-primary mb-2">Submit</button>
+                                </form>
+                            </div>
+
+                            <div class="col-md-6 col-sm-12">
+                                <div class="float-right" data-target="article.paginationWrapper">
+                                    Showing page <span data-target="article.currentPage">{{ .Page.Current }} </span> of
+                                    <span data-target="article.totalPages">{{ .Page.Count }}</span> page(s)
+                                    <a href="{{ .Page.PrevLink }}"
+                                        class="btn btn-sm btn-danger btn-xm {{ if .Page.IsFirst }} d-none {{ end }}"
+                                        data-action="click->article#previousPage"
+                                        data-target="article.previousButton">Previous</a>
+                                    <a href="{{ .Page.NextLink }}"
+                                        class="btn btn-sm btn-danger btn-xm  {{ if .Page.IsLast }} d-none {{ end }}"
+                                        data-action="click->article#nextPage" data-target="article.nextButton">Next</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <ul class="nav nav-tabs mb-4" id="myTab" role="tablist">
+                            {{ $currentSection := .Section}}
+                            {{ range $section := .Sections }}
+                            <li class="nav-item">
+                                <a class="nav-link {{ if eq $section $currentSection }} active {{ end }} text-uppercase" 
+                                 data-toggle="" href="?state={{ $selectedState }}&section={{ $section }}" 
+                                role="" aria-controls="home" {{ if eq $section $currentSection }} aria-selected="true" {{ end }}>{{ $section }}</a>
+                            </li>
+                            {{ end }}
+                        </ul>
+                        <div class="tab-content" id="myTabContent">
+                            <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+                                <div data-target="article.body">
+                                    {{ range $art := .Rules }}
+                                    <div class="judgement-list">
+                                        <p class="caseTitle">
+                                            <a href="/rules/read/{{ $art.ID }}">{{ $art.Title }}</a>
+                                        </p>
+                                        <hr style="color:lightgray" />
+                                    </div>
+                                    {{ end }}
+                                </div>
+                                <p class="text-danger" data-target="article.noResult"></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- [ Main Content ] end -->
+    </div>
+</div>
+
+{{ template "footer" . }}
+</body>
+
+</html>
+{{end}}
