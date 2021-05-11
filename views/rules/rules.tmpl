@@ -1,7 +1,7 @@
-{{define "rules/state"}}
+{{define "rules/rules"}}
 <!DOCTYPE html>
 <html lang="en">
-{{ template "html-head" printf "Rules Of Court"}}
+{{ template "html-head" printf .Title}}
 
 {{template "navbar" . }}
 {{template "header" . }}
@@ -16,11 +16,17 @@
                 <div class="row align-items-center">
                     <div class="col-md-12">
                         <div class="page-header-title">
-                            <h5 class="m-b-10" data-target="article.listTitle">Rules of Court</h5>
+                            <h5 class="m-b-10" data-target="article.listTitle">{{ .Title }}</h5>
                         </div>
                         <ul class="breadcrumb">
                             <li class="breadcrumb-item"><a href="/"><i class="feather icon-home"></i></a></li>
-                            <li class="breadcrumb-item"><a href="#!">Rules of Court</a></li>
+                            {{ range $menuItem := .BreadcrumbItems }}
+                                {{ if $menuItem.Active }}
+                                <li class="breadcrumb-item active"><a href="{{$menuItem.Href}}">{{ $menuItem.HyperText }}</a></li>
+                                {{ else }}
+                                <li class="breadcrumb-item"><a href="{{$menuItem.Href}}">{{$menuItem.HyperText}}</a></li>
+                                {{ end }}
+                            {{ end }}
                         </ul>
                     </div>
                 </div>
@@ -40,7 +46,7 @@
                                         <div class="input-group-prepend">
                                             <div class="input-group-text">Select</div>
                                         </div>
-                                        <select name="state" class="form-control"
+                                        <select name="state" class="form-control" style="max-width: 80%;"
                                             data-action="change->rules#stateChanged" data-filter-is-by="state"
                                             data-target="rules.state" data-initial-value="{{ .State }}">
                                             {{ $selectedState := .State }}
@@ -49,9 +55,12 @@
                                             </option>
                                             {{ end }}
                                         </select>
+                                        <div class="input-group-prepend">
+                                            <button type="submit" class="btn btn-primary">Submit</button>
+                                        </div>
                                     </div>
 
-                                    <button type="submit" class="btn btn-primary mb-2">Submit</button>
+                                    
                                 </form>
                             </div>
 

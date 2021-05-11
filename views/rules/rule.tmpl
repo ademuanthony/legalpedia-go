@@ -1,0 +1,60 @@
+{{define "rules/rule"}}
+<!DOCTYPE html>
+<html lang="en">
+{{ template "html-head" printf "Rules of Court"}}
+
+{{template "navbar" . }}
+{{template "header" . }}
+
+
+<!-- [ Main Content ] start -->
+<div class="pcoded-main-container">
+    <div class="pcoded-content">
+        <!-- [ breadcrumb ] start -->
+        <div class="page-header">
+            <div class="page-block">
+                <div class="row align-items-center">
+                    <div class="col-md-12">
+                        <div class="page-header-title">
+                            <h5 class="m-b-10">{{ .Rule.Title }}</h5>
+                        </div>
+                        <ul class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="/"><i class="feather icon-home"></i></a></li>
+                            {{ range $menuItem := .BreadcrumbItems }}
+                                {{ if $menuItem.Active }}
+                                <li class="breadcrumb-item active"><a href="{{$menuItem.Href}}">{{ $menuItem.HyperText }}</a></li>
+                                {{ else }}
+                                <li class="breadcrumb-item"><a href="{{$menuItem.Href}}">{{$menuItem.HyperText}}</a></li>
+                                {{ end }}
+                            {{ end }}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- [ breadcrumb ] end -->
+        <!-- [ Main Content ] start -->
+
+        <div class="row clearfix" data-controller="article">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                {{ rawHTML .Rule.Content }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- [ Main Content ] end -->
+    </div>
+</div>
+
+{{ template "footer" . }}
+</body>
+
+</html>
+{{end}}

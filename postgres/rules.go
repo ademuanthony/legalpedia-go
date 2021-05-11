@@ -128,8 +128,11 @@ func ruleFromModel(r *models.Rule) rulesofcourt.Rule {
 }
 
 func (pg *PgDb)	GetNames(ctx context.Context, ruleType string) ([]string, error) {
-	records, err := models.Rules(qm.Select("DISTINCT name"),
-	 models.RuleWhere.Type.EQ(null.StringFrom(ruleType))).All(ctx, pg.db)
+	records, err := models.Rules(
+		qm.Select("DISTINCT name"),
+	 	models.RuleWhere.Type.EQ(null.StringFrom(ruleType)),
+	 	qm.OrderBy(models.RuleColumns.Name),
+	 ).All(ctx, pg.db)
 	if err != nil {
 		return nil, err
 	}

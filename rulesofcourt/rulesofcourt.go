@@ -16,16 +16,17 @@ func Activate(ctx context.Context, db store, server *web.Server) error {
 }
 
 func (m *module) setupHTTP() error {
-	if err := m.server.Templates.AddTemplate("rules/state"); err != nil {
+	if err := m.server.Templates.AddTemplate("rules/rules"); err != nil {
 		return err
 	}
-	if err := m.server.Templates.AddTemplate("rules/others"); err != nil {
+	if err := m.server.Templates.AddTemplate("rules/rule"); err != nil {
 		return err
 	}
 
 	// page routes
 	m.server.AddRoute("/rules/state", web.GET, m.stateRulesPage)
-	// m.server.AddRoute("/articles/{id}", web.GET, m.articlePage, web.IDParamCtx)
+	m.server.AddRoute("/rules/others", web.GET, m.otherRulesPage)
+	m.server.AddRoute("/rules/read/{id}", web.GET, m.readRule, web.IDParamCtx)
 
 	// api routes
 	// m.server.AddAPIRoute("articles/Filter", web.GET, m.articlesEndpoint)
@@ -34,6 +35,12 @@ func (m *module) setupHTTP() error {
 		Href:      "/rules/state",
 		HyperText: "Rules of Court",
 		Info:      "Rules of Court",
+		Icon:      "feather icon-package",
+	})
+	m.server.AddMenuItem(web.MenuItem{
+		Href:      "/rules/others",
+		HyperText: "Other Rules of Court",
+		Info:      "Other Rules of Court",
 		Icon:      "feather icon-package",
 	})
 
