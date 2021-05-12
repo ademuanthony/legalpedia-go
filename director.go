@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/ademuanthony/legalpedia/article"
+	"github.com/ademuanthony/legalpedia/dictionary"
 	"github.com/ademuanthony/legalpedia/formsandprecedents"
 	"github.com/ademuanthony/legalpedia/homepage"
 	"github.com/ademuanthony/legalpedia/postgres"
@@ -40,6 +41,11 @@ func setupModules(ctx context.Context, cfg *config, server *web.Server) error {
 	}
 
 	if err = formsandprecedents.Activate(ctx, pgDb, server); err != nil {
+		log.Error(err)
+		return err
+	}
+
+	if err = dictionary.Activate(ctx, pgDb, server); err != nil {
 		log.Error(err)
 		return err
 	}

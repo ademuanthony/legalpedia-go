@@ -3,7 +3,7 @@ import 'regenerator-runtime/runtime'
 import { Application } from 'stimulus'
 import { definitionsFromContext } from 'stimulus/webpack-helpers'
 
-require('./scss/application.scss')
+require('./scss/style.scss')
 
 const application = Application.start()
 const context = require.context('./js/controllers', true, /\.js$/)
