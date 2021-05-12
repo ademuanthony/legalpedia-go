@@ -6,6 +6,7 @@ import (
 	"path/filepath"
 
 	"github.com/ademuanthony/legalpedia/article"
+	"github.com/ademuanthony/legalpedia/formsandprecedents"
 	"github.com/ademuanthony/legalpedia/homepage"
 	"github.com/ademuanthony/legalpedia/postgres"
 	"github.com/ademuanthony/legalpedia/rulesofcourt"
@@ -49,6 +50,7 @@ var (
 	webLogger  = backendLog.Logger("WEBL")
 	articleLog = backendLog.Logger("ATCL")
 	ruleLog    = backendLog.Logger("RULE")
+	formsPrecLog = backendLog.Logger("FPNT")
 )
 
 // Initialize package-global logger variables.
@@ -58,6 +60,7 @@ func init() {
 	web.UseLogger(webLogger)
 	article.UseLogger(articleLog)
 	rulesofcourt.UseLogger(ruleLog)
+	formsandprecedents.UseLogger(formsPrecLog)
 }
 
 // subsystemLoggers maps each subsystem identifier to its associated logger.
@@ -68,6 +71,7 @@ var subsystemLoggers = map[string]slog.Logger{
 	"PSQL": psqlLog,
 	"ATCL": articleLog,
 	"RULE": ruleLog,
+	"FPNT": formsPrecLog,
 }
 
 // initLogRotator initializes the logging rotater to write logs to logFile and

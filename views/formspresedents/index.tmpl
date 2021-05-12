@@ -1,7 +1,7 @@
-{{define "rules/others"}}
+{{define "formspresedents/index"}}
 <!DOCTYPE html>
 <html lang="en">
-{{ template "html-head" printf "Rules Of Court"}}
+{{ template "html-head" printf .PageTitle}}
 
 {{template "navbar" . }}
 {{template "header" . }}
@@ -16,11 +16,17 @@
                 <div class="row align-items-center">
                     <div class="col-md-12">
                         <div class="page-header-title">
-                            <h5 class="m-b-10" data-target="article.listTitle">Rules of Court</h5>
+                            <h5 class="m-b-10" data-target="article.listTitle">{{ .PageTitle }}</h5>
                         </div>
                         <ul class="breadcrumb">
                             <li class="breadcrumb-item"><a href="/"><i class="feather icon-home"></i></a></li>
-                            <li class="breadcrumb-item"><a href="#!">Rules of Court</a></li>
+                            {{ range $menuItem := .BreadcrumbItems }}
+                                {{ if $menuItem.Active }}
+                                <li class="breadcrumb-item active"><a href="{{$menuItem.Href}}">{{ $menuItem.HyperText }}</a></li>
+                                {{ else }}
+                                <li class="breadcrumb-item"><a href="{{$menuItem.Href}}">{{$menuItem.HyperText}}</a></li>
+                                {{ end }}
+                            {{ end }}
                         </ul>
                     </div>
                 </div>
@@ -34,21 +40,36 @@
                 <div class="card">
                     <div class="card-header">
                         <div class="row">
-                            <div class="col-md-6 col-sm-12">
+                            <div class="col-md-8 col-sm-12">
                                 <form class="form-inline">
                                     <div class="input-group mb-2 mr-sm-2">
-                                      <div class="input-group-prepend">
-                                        <div class="input-group-text">Search</div>
-                                      </div>
-                                      <input name="q" value="{{ .Term }}" type="text" class="form-control" 
-                                      id="inlineFormInputGroupUsername2" placeholder="Title">
+                                        <div class="input-group-prepend">
+                                            <div class="input-group-text">Category</div>
+                                        </div>
+                                        <select name="state" class="form-control" style="max-width: 80%;"
+                                            data-action="change->rules#stateChanged" data-filter-is-by="state"
+                                            data-target="rules.state" data-initial-value="{{ .Category }}">
+                                            <option>All</option>
+                                            {{ $selectedCategory := .Category }}
+                                            {{ range $cat := .Categories }}
+                                            <option {{ if eq $cat $selectedCategory }} selected {{ end }}>{{ $cat }}</option>
+                                            {{ end }}
+                                        </select>
                                     </div>
-                                  
-                                    <button type="submit" class="btn btn-primary mb-2">Submit</button>
-                                  </form>
+
+                                    <div class="input-group mb-2 mr-sm-2">
+                                        <input type="text" class="form-control" name="q" 
+                                        value="{{ .SearchTerm }}" placeholder="Title">
+                                        <div class="input-group-prepend">
+                                            <button type="submit" class="btn btn-primary">Search</button>
+                                        </div>
+                                    </div>
+
+                                    
+                                </form>
                             </div>
 
-                            <div class="col-md-6 col-sm-12">
+                            <div class="col-md-4 col-sm-12">
                                 <div class="float-right" data-target="article.paginationWrapper">
                                     Showing page <span data-target="article.currentPage">{{ .Page.Current }} </span> of
                                     <span data-target="article.totalPages">{{ .Page.Count }}</span> page(s)
@@ -64,13 +85,13 @@
                         </div>
                     </div>
                     <div class="card-body">
-                        <div class="row">
-                            <div class="col-md-12">
+                        <div class="tab-content" id="myTabContent">
+                            <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
                                 <div data-target="article.body">
-                                    {{ range $art := .Articles }}
+                                    {{ range $art := .List }}
                                     <div class="judgement-list">
                                         <p class="caseTitle">
-                                            <a href="/articles/{{ trim $art.UUID }}">{{ $art.Title }}</a>
+                                            <a href="/formspresedents/view/{{ trim $art.UUID }}">{{ $art.Title }}</a>
                                         </p>
                                         <hr style="color:lightgray" />
                                     </div>
@@ -79,7 +100,6 @@
                                 <p class="text-danger" data-target="article.noResult"></p>
                             </div>
                         </div>
-
                     </div>
                 </div>
             </div>
