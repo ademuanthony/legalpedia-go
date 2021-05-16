@@ -100,6 +100,8 @@ func TestUpsert(t *testing.T) {
 
 	t.Run("Keywords", testKeywordsUpsert)
 
+	t.Run("Maxims", testMaximsUpsert)
+
 	t.Run("OtpLicenses", testOtpLicensesUpsert)
 
 	t.Run("Publications", testPublicationsUpsert)

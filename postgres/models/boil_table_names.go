@@ -51,6 +51,7 @@ var TableNames = struct {
 	Indexes               string
 	KeywordRankings       string
 	Keywords              string
+	Maxims                string
 	OtpLicense            string
 	Publications          string
 	Rules                 string
@@ -103,6 +104,7 @@ var TableNames = struct {
 	Indexes:               "indexes",
 	KeywordRankings:       "keyword_rankings",
 	Keywords:              "keywords",
+	Maxims:                "maxims",
 	OtpLicense:            "otp_license",
 	Publications:          "publications",
 	Rules:                 "rules",

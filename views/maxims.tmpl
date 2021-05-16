@@ -1,0 +1,124 @@
+{{define "maxims"}}
+<!DOCTYPE html>
+<html lang="en">
+{{ template "html-head" printf .PageTitle}}
+
+{{template "navbar" . }}
+{{template "header" . }}
+
+
+<!-- [ Main Content ] start -->
+<div class="pcoded-main-container" data-controller="dictionary">
+    <div class="pcoded-content">
+        <!-- [ breadcrumb ] start -->
+        <div class="page-header">
+            <div class="page-block">
+                <div class="row align-items-center">
+                    <div class="col-md-12">
+                        <div class="page-header-title">
+                            <h5 class="m-b-10" data-target="article.listTitle">{{ .PageTitle }}</h5>
+                        </div>
+                        <ul class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="/"><i class="feather icon-home"></i></a></li>
+                            {{ range $menuItem := .BreadcrumbItems }}
+                            {{ if $menuItem.Active }}
+                            <li class="breadcrumb-item active"><a href="{{$menuItem.Href}}">{{ $menuItem.HyperText
+                                    }}</a></li>
+                            {{ else }}
+                            <li class="breadcrumb-item"><a href="{{$menuItem.Href}}">{{$menuItem.HyperText}}</a></li>
+                            {{ end }}
+                            {{ end }}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- [ breadcrumb ] end -->
+        <!-- [ Main Content ] start -->
+
+        <div class="row clearfix" data-controller="article">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="row">
+                            <div class="col-md-6 col-sm-12">
+                                <form class="form-inline">
+                                    <div class="input-group mb-2 mr-sm-2">
+                                        <div class="input-group-prepend">
+                                            <div class="input-group-text">Search</div>
+                                        </div>
+                                        <input name="q" value="{{ .SearchTerm }}" type="text" class="form-control"
+                                            id="inlineFormInputGroupUsername2" placeholder="Title">
+                                    </div>
+
+                                    <button type="submit" class="btn btn-primary mb-2">Submit</button>
+                                </form>
+                            </div>
+
+                            <div class="col-md-6 col-sm-12">
+                                <div class="float-right" data-target="article.paginationWrapper">
+                                    Showing page <span data-target="article.currentPage">{{ .Page.Current }} </span> of
+                                    <span data-target="article.totalPages">{{ .Page.Count }}</span> page(s)
+                                    <a href="{{ .Page.PrevLink }}"
+                                        class="btn btn-sm btn-danger btn-xm {{ if .Page.IsFirst }} d-none {{ end }}"
+                                        data-action="click->article#previousPage"
+                                        data-target="article.previousButton">Previous</a>
+                                    <a href="{{ .Page.NextLink }}"
+                                        class="btn btn-sm btn-danger btn-xm  {{ if .Page.IsLast }} d-none {{ end }}"
+                                        data-action="click->article#nextPage" data-target="article.nextButton">Next</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            {{ range $art := .Items }}
+                            <div class="col-md-3 word-button mb-3">
+                                <div class="card">
+                                    <div class="body">
+                                        <p class="text-center">
+                                            <a href="#definitionModal" class="content" 
+                                            data-action="click->dictionary#viewDefinition" 
+                                            data-content="{{ $art.Content }}"
+                                            data-title="{{ $art.Title }}"
+                                            data-toggle="modal" data-target="#definitionModal">{{ $art.Title }}</a>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            {{ end }}
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="definitionModal" tabindex="-1" role="dialog" aria-labelledby="definitionModalLabel"
+            data-backdrop="static">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">
+                            <span data-target="dictionary.definitionTitle"></span>
+                        </h4>
+                    </div>
+
+                    <div class="modal-body" data-target="dictionary.definitionBody"></div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default waves-effect"
+                            data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- [ Main Content ] end -->
+    </div>
+</div>
+
+{{ template "footer" . }}
+</body>
+
+</html>
+{{end}}

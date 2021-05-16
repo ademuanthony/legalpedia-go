@@ -7,6 +7,7 @@ import (
 	"github.com/ademuanthony/legalpedia/dictionary"
 	"github.com/ademuanthony/legalpedia/formsandprecedents"
 	"github.com/ademuanthony/legalpedia/homepage"
+	"github.com/ademuanthony/legalpedia/maxim"
 	"github.com/ademuanthony/legalpedia/postgres"
 	"github.com/ademuanthony/legalpedia/rulesofcourt"
 	"github.com/ademuanthony/legalpedia/web"
@@ -49,5 +50,11 @@ func setupModules(ctx context.Context, cfg *config, server *web.Server) error {
 		log.Error(err)
 		return err
 	}
+
+	if err = maxim.Activate(ctx, pgDb, server); err != nil {
+		log.Error(err)
+		return err
+	}
+	
 	return nil
 }

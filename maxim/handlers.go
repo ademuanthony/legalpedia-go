@@ -1,4 +1,4 @@
-package dictionary
+package maxim
 
 import (
 	"io"
@@ -19,7 +19,7 @@ func (m *module) indexPage(w http.ResponseWriter, r *http.Request) {
 		Title:              title,
 	}
 
-	result, err := m.db.FindDictionaries(r.Context(), reqInput)
+	result, err := m.db.FindMaximes(r.Context(), reqInput)
 	if err != nil {
 		log.Errorf("State execute failure: %v", err)
 		m.server.StatusPage(w, r, web.DefaultErrorCode, web.DefaultErrorMessage, "Unable to fetch data", web.ExpStatusError)
@@ -28,7 +28,7 @@ func (m *module) indexPage(w http.ResponseWriter, r *http.Request) {
 
 	str, err := m.server.Templates.ExecTemplateToString("dictionary_index", struct {
 		*web.CommonPageData
-		Items           []Dictionay
+		Items           []Maxim
 		Page            web.PageInfo
 		PageTitle       string
 		SearchTerm      string
@@ -39,10 +39,10 @@ func (m *module) indexPage(w http.ResponseWriter, r *http.Request) {
 		Page: web.PaginationResponseInfo(result.TotalCount, pageReq.Page,
 			pageReq.PageSize, map[string]interface{}{"q": title}),
 		SearchTerm: title,
-		PageTitle:  "Law Dictionary",
+		PageTitle:  "Legal MAxims",
 		BreadcrumbItems: []web.BreadcrumbItem{
 			{
-				HyperText: "Law Dictionary",
+				HyperText: "Legal Maxims",
 				Active:    true,
 			},
 		},

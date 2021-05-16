@@ -9,6 +9,7 @@ import (
 	"github.com/ademuanthony/legalpedia/dictionary"
 	"github.com/ademuanthony/legalpedia/formsandprecedents"
 	"github.com/ademuanthony/legalpedia/homepage"
+	"github.com/ademuanthony/legalpedia/maxim"
 	"github.com/ademuanthony/legalpedia/postgres"
 	"github.com/ademuanthony/legalpedia/rulesofcourt"
 	"github.com/ademuanthony/legalpedia/web"
@@ -53,6 +54,7 @@ var (
 	ruleLog       = backendLog.Logger("RULE")
 	formsPrecLog  = backendLog.Logger("FPNT")
 	dictionaryLog = backendLog.Logger("DICT")
+	maximLog      = backendLog.Logger("MAXI")
 )
 
 // Initialize package-global logger variables.
@@ -64,6 +66,7 @@ func init() {
 	rulesofcourt.UseLogger(ruleLog)
 	formsandprecedents.UseLogger(formsPrecLog)
 	dictionary.UseLogger(dictionaryLog)
+	maxim.UseLogger(maximLog)
 }
 
 // subsystemLoggers maps each subsystem identifier to its associated logger.
@@ -76,6 +79,7 @@ var subsystemLoggers = map[string]slog.Logger{
 	"RULE": ruleLog,
 	"FPNT": formsPrecLog,
 	"DICT": dictionaryLog,
+	"MAXI": maximLog,
 }
 
 // initLogRotator initializes the logging rotater to write logs to logFile and
