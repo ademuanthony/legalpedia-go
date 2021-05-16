@@ -1,9 +1,13 @@
 [psql]
-    dbname = "lpedia"
-    host = "localhost"
-    user = "postgres"
-    pass = "pass"
+    dbnamea = "lpedia"
+    hosta = "localhost"
+    usera = "postgres"
+    passa = "pass"
     sslmode = "disable"
+    dbname = "lpedia"
+    host = "legalpedia-1.cohgjx9vfwbm.us-east-1.rds.amazonaws.com"
+    user = "postgres"
+    pass = "lpDeMityat9078"
     whitelist=[
         "Teams",
         "TeamMembers",
@@ -38,7 +42,7 @@
         "JudgementsSummaries",
         "keywords",
         "keyword_rankings",
-        "LawOfFederation",
+        "LawsOfFederation",
         "LawOfFedParts",
         "LawOfFedScheds",
         "LawOfFedSections",

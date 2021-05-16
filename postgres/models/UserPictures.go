@@ -24,34 +24,34 @@ import (
 
 // UserPicture is an object representing the database table.
 type UserPicture struct {
-	ID     string      `boil:"Id" json:"Id" toml:"Id" yaml:"Id"`
-	UserId int64       `boil:"UserId" json:"UserId" toml:"UserId" yaml:"UserId"`
-	Base64 null.String `boil:"Base64" json:"Base64,omitempty" toml:"Base64" yaml:"Base64,omitempty"`
+	ID      string      `boil:"Id" json:"Id" toml:"Id" yaml:"Id"`
+	UserId  int64       `boil:"UserId" json:"UserId" toml:"UserId" yaml:"UserId"`
+	Content null.String `boil:"Content" json:"Content,omitempty" toml:"Content" yaml:"Content,omitempty"`
 
 	R *userPictureR `boil:"-" json:"-" toml:"-" yaml:"-"`
 	L userPictureL  `boil:"-" json:"-" toml:"-" yaml:"-"`
 }
 
 var UserPictureColumns = struct {
-	ID     string
-	UserId string
-	Base64 string
+	ID      string
+	UserId  string
+	Content string
 }{
-	ID:     "Id",
-	UserId: "UserId",
-	Base64: "Base64",
+	ID:      "Id",
+	UserId:  "UserId",
+	Content: "Content",
 }
 
 // Generated where
 
 var UserPictureWhere = struct {
-	ID     whereHelperstring
-	UserId whereHelperint64
-	Base64 whereHelpernull_String
+	ID      whereHelperstring
+	UserId  whereHelperint64
+	Content whereHelpernull_String
 }{
-	ID:     whereHelperstring{field: "\"UserPictures\".\"Id\""},
-	UserId: whereHelperint64{field: "\"UserPictures\".\"UserId\""},
-	Base64: whereHelpernull_String{field: "\"UserPictures\".\"Base64\""},
+	ID:      whereHelperstring{field: "\"UserPictures\".\"Id\""},
+	UserId:  whereHelperint64{field: "\"UserPictures\".\"UserId\""},
+	Content: whereHelpernull_String{field: "\"UserPictures\".\"Content\""},
 }
 
 // UserPictureRels is where relationship names are stored.
@@ -71,8 +71,8 @@ func (*userPictureR) NewStruct() *userPictureR {
 type userPictureL struct{}
 
 var (
-	userPictureAllColumns            = []string{"Id", "UserId", "Base64"}
-	userPictureColumnsWithoutDefault = []string{"Id", "UserId", "Base64"}
+	userPictureAllColumns            = []string{"Id", "UserId", "Content"}
+	userPictureColumnsWithoutDefault = []string{"Id", "UserId", "Content"}
 	userPictureColumnsWithDefault    = []string{}
 	userPicturePrimaryKeyColumns     = []string{"Id"}
 )

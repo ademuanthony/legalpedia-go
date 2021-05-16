@@ -25,6 +25,7 @@ var TableNames = struct {
 	LawOfFedParts         string
 	LawOfFedScheds        string
 	LawOfFedSections      string
+	LawsOfFederation      string
 	License               string
 	NoteComments          string
 	NoteRatings           string
@@ -78,6 +79,7 @@ var TableNames = struct {
 	LawOfFedParts:         "LawOfFedParts",
 	LawOfFedScheds:        "LawOfFedScheds",
 	LawOfFedSections:      "LawOfFedSections",
+	LawsOfFederation:      "LawsOfFederation",
 	License:               "License",
 	NoteComments:          "NoteComments",
 	NoteRatings:           "NoteRatings",

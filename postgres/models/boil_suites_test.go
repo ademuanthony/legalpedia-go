@@ -33,6 +33,7 @@ func TestParent(t *testing.T) {
 	t.Run("LawOfFedParts", testLawOfFedParts)
 	t.Run("LawOfFedScheds", testLawOfFedScheds)
 	t.Run("LawOfFedSections", testLawOfFedSections)
+	t.Run("LawsOfFederations", testLawsOfFederations)
 	t.Run("Licenses", testLicenses)
 	t.Run("NoteComments", testNoteComments)
 	t.Run("NoteRatings", testNoteRatings)
@@ -88,6 +89,7 @@ func TestDelete(t *testing.T) {
 	t.Run("LawOfFedParts", testLawOfFedPartsDelete)
 	t.Run("LawOfFedScheds", testLawOfFedSchedsDelete)
 	t.Run("LawOfFedSections", testLawOfFedSectionsDelete)
+	t.Run("LawsOfFederations", testLawsOfFederationsDelete)
 	t.Run("Licenses", testLicensesDelete)
 	t.Run("NoteComments", testNoteCommentsDelete)
 	t.Run("NoteRatings", testNoteRatingsDelete)
@@ -143,6 +145,7 @@ func TestQueryDeleteAll(t *testing.T) {
 	t.Run("LawOfFedParts", testLawOfFedPartsQueryDeleteAll)
 	t.Run("LawOfFedScheds", testLawOfFedSchedsQueryDeleteAll)
 	t.Run("LawOfFedSections", testLawOfFedSectionsQueryDeleteAll)
+	t.Run("LawsOfFederations", testLawsOfFederationsQueryDeleteAll)
 	t.Run("Licenses", testLicensesQueryDeleteAll)
 	t.Run("NoteComments", testNoteCommentsQueryDeleteAll)
 	t.Run("NoteRatings", testNoteRatingsQueryDeleteAll)
@@ -198,6 +201,7 @@ func TestSliceDeleteAll(t *testing.T) {
 	t.Run("LawOfFedParts", testLawOfFedPartsSliceDeleteAll)
 	t.Run("LawOfFedScheds", testLawOfFedSchedsSliceDeleteAll)
 	t.Run("LawOfFedSections", testLawOfFedSectionsSliceDeleteAll)
+	t.Run("LawsOfFederations", testLawsOfFederationsSliceDeleteAll)
 	t.Run("Licenses", testLicensesSliceDeleteAll)
 	t.Run("NoteComments", testNoteCommentsSliceDeleteAll)
 	t.Run("NoteRatings", testNoteRatingsSliceDeleteAll)
@@ -253,6 +257,7 @@ func TestExists(t *testing.T) {
 	t.Run("LawOfFedParts", testLawOfFedPartsExists)
 	t.Run("LawOfFedScheds", testLawOfFedSchedsExists)
 	t.Run("LawOfFedSections", testLawOfFedSectionsExists)
+	t.Run("LawsOfFederations", testLawsOfFederationsExists)
 	t.Run("Licenses", testLicensesExists)
 	t.Run("NoteComments", testNoteCommentsExists)
 	t.Run("NoteRatings", testNoteRatingsExists)
@@ -308,6 +313,7 @@ func TestFind(t *testing.T) {
 	t.Run("LawOfFedParts", testLawOfFedPartsFind)
 	t.Run("LawOfFedScheds", testLawOfFedSchedsFind)
 	t.Run("LawOfFedSections", testLawOfFedSectionsFind)
+	t.Run("LawsOfFederations", testLawsOfFederationsFind)
 	t.Run("Licenses", testLicensesFind)
 	t.Run("NoteComments", testNoteCommentsFind)
 	t.Run("NoteRatings", testNoteRatingsFind)
@@ -363,6 +369,7 @@ func TestBind(t *testing.T) {
 	t.Run("LawOfFedParts", testLawOfFedPartsBind)
 	t.Run("LawOfFedScheds", testLawOfFedSchedsBind)
 	t.Run("LawOfFedSections", testLawOfFedSectionsBind)
+	t.Run("LawsOfFederations", testLawsOfFederationsBind)
 	t.Run("Licenses", testLicensesBind)
 	t.Run("NoteComments", testNoteCommentsBind)
 	t.Run("NoteRatings", testNoteRatingsBind)
@@ -418,6 +425,7 @@ func TestOne(t *testing.T) {
 	t.Run("LawOfFedParts", testLawOfFedPartsOne)
 	t.Run("LawOfFedScheds", testLawOfFedSchedsOne)
 	t.Run("LawOfFedSections", testLawOfFedSectionsOne)
+	t.Run("LawsOfFederations", testLawsOfFederationsOne)
 	t.Run("Licenses", testLicensesOne)
 	t.Run("NoteComments", testNoteCommentsOne)
 	t.Run("NoteRatings", testNoteRatingsOne)
@@ -473,6 +481,7 @@ func TestAll(t *testing.T) {
 	t.Run("LawOfFedParts", testLawOfFedPartsAll)
 	t.Run("LawOfFedScheds", testLawOfFedSchedsAll)
 	t.Run("LawOfFedSections", testLawOfFedSectionsAll)
+	t.Run("LawsOfFederations", testLawsOfFederationsAll)
 	t.Run("Licenses", testLicensesAll)
 	t.Run("NoteComments", testNoteCommentsAll)
 	t.Run("NoteRatings", testNoteRatingsAll)
@@ -528,6 +537,7 @@ func TestCount(t *testing.T) {
 	t.Run("LawOfFedParts", testLawOfFedPartsCount)
 	t.Run("LawOfFedScheds", testLawOfFedSchedsCount)
 	t.Run("LawOfFedSections", testLawOfFedSectionsCount)
+	t.Run("LawsOfFederations", testLawsOfFederationsCount)
 	t.Run("Licenses", testLicensesCount)
 	t.Run("NoteComments", testNoteCommentsCount)
 	t.Run("NoteRatings", testNoteRatingsCount)
@@ -604,6 +614,8 @@ func TestInsert(t *testing.T) {
 	t.Run("LawOfFedScheds", testLawOfFedSchedsInsertWhitelist)
 	t.Run("LawOfFedSections", testLawOfFedSectionsInsert)
 	t.Run("LawOfFedSections", testLawOfFedSectionsInsertWhitelist)
+	t.Run("LawsOfFederations", testLawsOfFederationsInsert)
+	t.Run("LawsOfFederations", testLawsOfFederationsInsertWhitelist)
 	t.Run("Licenses", testLicensesInsert)
 	t.Run("Licenses", testLicensesInsertWhitelist)
 	t.Run("NoteComments", testNoteCommentsInsert)
@@ -670,7 +682,9 @@ func TestInsert(t *testing.T) {
 
 // TestToOne tests cannot be run in parallel
 // or deadlocks can occur.
-func TestToOne(t *testing.T) {}
+func TestToOne(t *testing.T) {
+	t.Run("TeamMemberToTeamUsingTeamIdTeam", testTeamMemberToOneTeamUsingTeamIdTeam)
+}
 
 // TestOneToOne tests cannot be run in parallel
 // or deadlocks can occur.
@@ -678,15 +692,21 @@ func TestOneToOne(t *testing.T) {}
 
 // TestToMany tests cannot be run in parallel
 // or deadlocks can occur.
-func TestToMany(t *testing.T) {}
+func TestToMany(t *testing.T) {
+	t.Run("TeamToTeamIdTeamMembers", testTeamToManyTeamIdTeamMembers)
+}
 
 // TestToOneSet tests cannot be run in parallel
 // or deadlocks can occur.
-func TestToOneSet(t *testing.T) {}
+func TestToOneSet(t *testing.T) {
+	t.Run("TeamMemberToTeamUsingTeamIdTeamMembers", testTeamMemberToOneSetOpTeamUsingTeamIdTeam)
+}
 
 // TestToOneRemove tests cannot be run in parallel
 // or deadlocks can occur.
-func TestToOneRemove(t *testing.T) {}
+func TestToOneRemove(t *testing.T) {
+	t.Run("TeamMemberToTeamUsingTeamIdTeamMembers", testTeamMemberToOneRemoveOpTeamUsingTeamIdTeam)
+}
 
 // TestOneToOneSet tests cannot be run in parallel
 // or deadlocks can occur.
@@ -698,15 +718,21 @@ func TestOneToOneRemove(t *testing.T) {}
 
 // TestToManyAdd tests cannot be run in parallel
 // or deadlocks can occur.
-func TestToManyAdd(t *testing.T) {}
+func TestToManyAdd(t *testing.T) {
+	t.Run("TeamToTeamIdTeamMembers", testTeamToManyAddOpTeamIdTeamMembers)
+}
 
 // TestToManySet tests cannot be run in parallel
 // or deadlocks can occur.
-func TestToManySet(t *testing.T) {}
+func TestToManySet(t *testing.T) {
+	t.Run("TeamToTeamIdTeamMembers", testTeamToManySetOpTeamIdTeamMembers)
+}
 
 // TestToManyRemove tests cannot be run in parallel
 // or deadlocks can occur.
-func TestToManyRemove(t *testing.T) {}
+func TestToManyRemove(t *testing.T) {
+	t.Run("TeamToTeamIdTeamMembers", testTeamToManyRemoveOpTeamIdTeamMembers)
+}
 
 func TestReload(t *testing.T) {
 	t.Run("BookmarkCollections", testBookmarkCollectionsReload)
@@ -730,6 +756,7 @@ func TestReload(t *testing.T) {
 	t.Run("LawOfFedParts", testLawOfFedPartsReload)
 	t.Run("LawOfFedScheds", testLawOfFedSchedsReload)
 	t.Run("LawOfFedSections", testLawOfFedSectionsReload)
+	t.Run("LawsOfFederations", testLawsOfFederationsReload)
 	t.Run("Licenses", testLicensesReload)
 	t.Run("NoteComments", testNoteCommentsReload)
 	t.Run("NoteRatings", testNoteRatingsReload)
@@ -785,6 +812,7 @@ func TestReloadAll(t *testing.T) {
 	t.Run("LawOfFedParts", testLawOfFedPartsReloadAll)
 	t.Run("LawOfFedScheds", testLawOfFedSchedsReloadAll)
 	t.Run("LawOfFedSections", testLawOfFedSectionsReloadAll)
+	t.Run("LawsOfFederations", testLawsOfFederationsReloadAll)
 	t.Run("Licenses", testLicensesReloadAll)
 	t.Run("NoteComments", testNoteCommentsReloadAll)
 	t.Run("NoteRatings", testNoteRatingsReloadAll)
@@ -840,6 +868,7 @@ func TestSelect(t *testing.T) {
 	t.Run("LawOfFedParts", testLawOfFedPartsSelect)
 	t.Run("LawOfFedScheds", testLawOfFedSchedsSelect)
 	t.Run("LawOfFedSections", testLawOfFedSectionsSelect)
+	t.Run("LawsOfFederations", testLawsOfFederationsSelect)
 	t.Run("Licenses", testLicensesSelect)
 	t.Run("NoteComments", testNoteCommentsSelect)
 	t.Run("NoteRatings", testNoteRatingsSelect)
@@ -895,6 +924,7 @@ func TestUpdate(t *testing.T) {
 	t.Run("LawOfFedParts", testLawOfFedPartsUpdate)
 	t.Run("LawOfFedScheds", testLawOfFedSchedsUpdate)
 	t.Run("LawOfFedSections", testLawOfFedSectionsUpdate)
+	t.Run("LawsOfFederations", testLawsOfFederationsUpdate)
 	t.Run("Licenses", testLicensesUpdate)
 	t.Run("NoteComments", testNoteCommentsUpdate)
 	t.Run("NoteRatings", testNoteRatingsUpdate)
@@ -950,6 +980,7 @@ func TestSliceUpdateAll(t *testing.T) {
 	t.Run("LawOfFedParts", testLawOfFedPartsSliceUpdateAll)
 	t.Run("LawOfFedScheds", testLawOfFedSchedsSliceUpdateAll)
 	t.Run("LawOfFedSections", testLawOfFedSectionsSliceUpdateAll)
+	t.Run("LawsOfFederations", testLawsOfFederationsSliceUpdateAll)
 	t.Run("Licenses", testLicensesSliceUpdateAll)
 	t.Run("NoteComments", testNoteCommentsSliceUpdateAll)
 	t.Run("NoteRatings", testNoteRatingsSliceUpdateAll)

@@ -353,6 +353,166 @@ func testTeamMembersInsertWhitelist(t *testing.T) {
 	}
 }
 
+func testTeamMemberToOneTeamUsingTeamIdTeam(t *testing.T) {
+	ctx := context.Background()
+	tx := MustTx(boil.BeginTx(ctx, nil))
+	defer func() { _ = tx.Rollback() }()
+
+	var local TeamMember
+	var foreign Team
+
+	seed := randomize.NewSeed()
+	if err := randomize.Struct(seed, &local, teamMemberDBTypes, true, teamMemberColumnsWithDefault...); err != nil {
+		t.Errorf("Unable to randomize TeamMember struct: %s", err)
+	}
+	if err := randomize.Struct(seed, &foreign, teamDBTypes, false, teamColumnsWithDefault...); err != nil {
+		t.Errorf("Unable to randomize Team struct: %s", err)
+	}
+
+	if err := foreign.Insert(ctx, tx, boil.Infer()); err != nil {
+		t.Fatal(err)
+	}
+
+	queries.Assign(&local.TeamId, foreign.ID)
+	if err := local.Insert(ctx, tx, boil.Infer()); err != nil {
+		t.Fatal(err)
+	}
+
+	check, err := local.TeamIdTeam().One(ctx, tx)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if !queries.Equal(check.ID, foreign.ID) {
+		t.Errorf("want: %v, got %v", foreign.ID, check.ID)
+	}
+
+	slice := TeamMemberSlice{&local}
+	if err = local.L.LoadTeamIdTeam(ctx, tx, false, (*[]*TeamMember)(&slice), nil); err != nil {
+		t.Fatal(err)
+	}
+	if local.R.TeamIdTeam == nil {
+		t.Error("struct should have been eager loaded")
+	}
+
+	local.R.TeamIdTeam = nil
+	if err = local.L.LoadTeamIdTeam(ctx, tx, true, &local, nil); err != nil {
+		t.Fatal(err)
+	}
+	if local.R.TeamIdTeam == nil {
+		t.Error("struct should have been eager loaded")
+	}
+}
+
+func testTeamMemberToOneSetOpTeamUsingTeamIdTeam(t *testing.T) {
+	var err error
+
+	ctx := context.Background()
+	tx := MustTx(boil.BeginTx(ctx, nil))
+	defer func() { _ = tx.Rollback() }()
+
+	var a TeamMember
+	var b, c Team
+
+	seed := randomize.NewSeed()
+	if err = randomize.Struct(seed, &a, teamMemberDBTypes, false, strmangle.SetComplement(teamMemberPrimaryKeyColumns, teamMemberColumnsWithoutDefault)...); err != nil {
+		t.Fatal(err)
+	}
+	if err = randomize.Struct(seed, &b, teamDBTypes, false, strmangle.SetComplement(teamPrimaryKeyColumns, teamColumnsWithoutDefault)...); err != nil {
+		t.Fatal(err)
+	}
+	if err = randomize.Struct(seed, &c, teamDBTypes, false, strmangle.SetComplement(teamPrimaryKeyColumns, teamColumnsWithoutDefault)...); err != nil {
+		t.Fatal(err)
+	}
+
+	if err := a.Insert(ctx, tx, boil.Infer()); err != nil {
+		t.Fatal(err)
+	}
+	if err = b.Insert(ctx, tx, boil.Infer()); err != nil {
+		t.Fatal(err)
+	}
+
+	for i, x := range []*Team{&b, &c} {
+		err = a.SetTeamIdTeam(ctx, tx, i != 0, x)
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		if a.R.TeamIdTeam != x {
+			t.Error("relationship struct not set to correct value")
+		}
+
+		if x.R.TeamIdTeamMembers[0] != &a {
+			t.Error("failed to append to foreign relationship struct")
+		}
+		if !queries.Equal(a.TeamId, x.ID) {
+			t.Error("foreign key was wrong value", a.TeamId)
+		}
+
+		zero := reflect.Zero(reflect.TypeOf(a.TeamId))
+		reflect.Indirect(reflect.ValueOf(&a.TeamId)).Set(zero)
+
+		if err = a.Reload(ctx, tx); err != nil {
+			t.Fatal("failed to reload", err)
+		}
+
+		if !queries.Equal(a.TeamId, x.ID) {
+			t.Error("foreign key was wrong value", a.TeamId, x.ID)
+		}
+	}
+}
+
+func testTeamMemberToOneRemoveOpTeamUsingTeamIdTeam(t *testing.T) {
+	var err error
+
+	ctx := context.Background()
+	tx := MustTx(boil.BeginTx(ctx, nil))
+	defer func() { _ = tx.Rollback() }()
+
+	var a TeamMember
+	var b Team
+
+	seed := randomize.NewSeed()
+	if err = randomize.Struct(seed, &a, teamMemberDBTypes, false, strmangle.SetComplement(teamMemberPrimaryKeyColumns, teamMemberColumnsWithoutDefault)...); err != nil {
+		t.Fatal(err)
+	}
+	if err = randomize.Struct(seed, &b, teamDBTypes, false, strmangle.SetComplement(teamPrimaryKeyColumns, teamColumnsWithoutDefault)...); err != nil {
+		t.Fatal(err)
+	}
+
+	if err = a.Insert(ctx, tx, boil.Infer()); err != nil {
+		t.Fatal(err)
+	}
+
+	if err = a.SetTeamIdTeam(ctx, tx, true, &b); err != nil {
+		t.Fatal(err)
+	}
+
+	if err = a.RemoveTeamIdTeam(ctx, tx, &b); err != nil {
+		t.Error("failed to remove relationship")
+	}
+
+	count, err := a.TeamIdTeam().Count(ctx, tx)
+	if err != nil {
+		t.Error(err)
+	}
+	if count != 0 {
+		t.Error("want no relationships remaining")
+	}
+
+	if a.R.TeamIdTeam != nil {
+		t.Error("R struct entry should be nil")
+	}
+
+	if !queries.IsValuerNil(a.TeamId) {
+		t.Error("foreign key value should be nil")
+	}
+
+	if len(b.R.TeamIdTeamMembers) != 0 {
+		t.Error("failed to remove a from b's relationships")
+	}
+}
+
 func testTeamMembersReload(t *testing.T) {
 	t.Parallel()
 

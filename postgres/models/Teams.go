@@ -71,10 +71,14 @@ var TeamWhere = struct {
 
 // TeamRels is where relationship names are stored.
 var TeamRels = struct {
-}{}
+	TeamIdTeamMembers string
+}{
+	TeamIdTeamMembers: "TeamIdTeamMembers",
+}
 
 // teamR is where relationships are stored.
 type teamR struct {
+	TeamIdTeamMembers TeamMemberSlice `boil:"TeamIdTeamMembers" json:"TeamIdTeamMembers" toml:"TeamIdTeamMembers" yaml:"TeamIdTeamMembers"`
 }
 
 // NewStruct creates a new relationship struct
@@ -181,6 +185,241 @@ func (q teamQuery) Exists(ctx context.Context, exec boil.ContextExecutor) (bool,
 	}
 
 	return count > 0, nil
+}
+
+// TeamIdTeamMembers retrieves all the TeamMember's TeamMembers with an executor via TeamId column.
+func (o *Team) TeamIdTeamMembers(mods ...qm.QueryMod) teamMemberQuery {
+	var queryMods []qm.QueryMod
+	if len(mods) != 0 {
+		queryMods = append(queryMods, mods...)
+	}
+
+	queryMods = append(queryMods,
+		qm.Where("\"TeamMembers\".\"TeamId\"=?", o.ID),
+	)
+
+	query := TeamMembers(queryMods...)
+	queries.SetFrom(query.Query, "\"TeamMembers\"")
+
+	if len(queries.GetSelect(query.Query)) == 0 {
+		queries.SetSelect(query.Query, []string{"\"TeamMembers\".*"})
+	}
+
+	return query
+}
+
+// LoadTeamIdTeamMembers allows an eager lookup of values, cached into the
+// loaded structs of the objects. This is for a 1-M or N-M relationship.
+func (teamL) LoadTeamIdTeamMembers(ctx context.Context, e boil.ContextExecutor, singular bool, maybeTeam interface{}, mods queries.Applicator) error {
+	var slice []*Team
+	var object *Team
+
+	if singular {
+		object = maybeTeam.(*Team)
+	} else {
+		slice = *maybeTeam.(*[]*Team)
+	}
+
+	args := make([]interface{}, 0, 1)
+	if singular {
+		if object.R == nil {
+			object.R = &teamR{}
+		}
+		args = append(args, object.ID)
+	} else {
+	Outer:
+		for _, obj := range slice {
+			if obj.R == nil {
+				obj.R = &teamR{}
+			}
+
+			for _, a := range args {
+				if queries.Equal(a, obj.ID) {
+					continue Outer
+				}
+			}
+
+			args = append(args, obj.ID)
+		}
+	}
+
+	if len(args) == 0 {
+		return nil
+	}
+
+	query := NewQuery(
+		qm.From(`TeamMembers`),
+		qm.WhereIn(`TeamMembers.TeamId in ?`, args...),
+	)
+	if mods != nil {
+		mods.Apply(query)
+	}
+
+	results, err := query.QueryContext(ctx, e)
+	if err != nil {
+		return errors.Wrap(err, "failed to eager load TeamMembers")
+	}
+
+	var resultSlice []*TeamMember
+	if err = queries.Bind(results, &resultSlice); err != nil {
+		return errors.Wrap(err, "failed to bind eager loaded slice TeamMembers")
+	}
+
+	if err = results.Close(); err != nil {
+		return errors.Wrap(err, "failed to close results in eager load on TeamMembers")
+	}
+	if err = results.Err(); err != nil {
+		return errors.Wrap(err, "error occurred during iteration of eager loaded relations for TeamMembers")
+	}
+
+	if singular {
+		object.R.TeamIdTeamMembers = resultSlice
+		for _, foreign := range resultSlice {
+			if foreign.R == nil {
+				foreign.R = &teamMemberR{}
+			}
+			foreign.R.TeamIdTeam = object
+		}
+		return nil
+	}
+
+	for _, foreign := range resultSlice {
+		for _, local := range slice {
+			if queries.Equal(local.ID, foreign.TeamId) {
+				local.R.TeamIdTeamMembers = append(local.R.TeamIdTeamMembers, foreign)
+				if foreign.R == nil {
+					foreign.R = &teamMemberR{}
+				}
+				foreign.R.TeamIdTeam = local
+				break
+			}
+		}
+	}
+
+	return nil
+}
+
+// AddTeamIdTeamMembers adds the given related objects to the existing relationships
+// of the Team, optionally inserting them as new records.
+// Appends related to o.R.TeamIdTeamMembers.
+// Sets related.R.TeamIdTeam appropriately.
+func (o *Team) AddTeamIdTeamMembers(ctx context.Context, exec boil.ContextExecutor, insert bool, related ...*TeamMember) error {
+	var err error
+	for _, rel := range related {
+		if insert {
+			queries.Assign(&rel.TeamId, o.ID)
+			if err = rel.Insert(ctx, exec, boil.Infer()); err != nil {
+				return errors.Wrap(err, "failed to insert into foreign table")
+			}
+		} else {
+			updateQuery := fmt.Sprintf(
+				"UPDATE \"TeamMembers\" SET %s WHERE %s",
+				strmangle.SetParamNames("\"", "\"", 1, []string{"TeamId"}),
+				strmangle.WhereClause("\"", "\"", 2, teamMemberPrimaryKeyColumns),
+			)
+			values := []interface{}{o.ID, rel.ID}
+
+			if boil.IsDebug(ctx) {
+				writer := boil.DebugWriterFrom(ctx)
+				fmt.Fprintln(writer, updateQuery)
+				fmt.Fprintln(writer, values)
+			}
+			if _, err = exec.ExecContext(ctx, updateQuery, values...); err != nil {
+				return errors.Wrap(err, "failed to update foreign table")
+			}
+
+			queries.Assign(&rel.TeamId, o.ID)
+		}
+	}
+
+	if o.R == nil {
+		o.R = &teamR{
+			TeamIdTeamMembers: related,
+		}
+	} else {
+		o.R.TeamIdTeamMembers = append(o.R.TeamIdTeamMembers, related...)
+	}
+
+	for _, rel := range related {
+		if rel.R == nil {
+			rel.R = &teamMemberR{
+				TeamIdTeam: o,
+			}
+		} else {
+			rel.R.TeamIdTeam = o
+		}
+	}
+	return nil
+}
+
+// SetTeamIdTeamMembers removes all previously related items of the
+// Team replacing them completely with the passed
+// in related items, optionally inserting them as new records.
+// Sets o.R.TeamIdTeam's TeamIdTeamMembers accordingly.
+// Replaces o.R.TeamIdTeamMembers with related.
+// Sets related.R.TeamIdTeam's TeamIdTeamMembers accordingly.
+func (o *Team) SetTeamIdTeamMembers(ctx context.Context, exec boil.ContextExecutor, insert bool, related ...*TeamMember) error {
+	query := "update \"TeamMembers\" set \"TeamId\" = null where \"TeamId\" = $1"
+	values := []interface{}{o.ID}
+	if boil.IsDebug(ctx) {
+		writer := boil.DebugWriterFrom(ctx)
+		fmt.Fprintln(writer, query)
+		fmt.Fprintln(writer, values)
+	}
+	_, err := exec.ExecContext(ctx, query, values...)
+	if err != nil {
+		return errors.Wrap(err, "failed to remove relationships before set")
+	}
+
+	if o.R != nil {
+		for _, rel := range o.R.TeamIdTeamMembers {
+			queries.SetScanner(&rel.TeamId, nil)
+			if rel.R == nil {
+				continue
+			}
+
+			rel.R.TeamIdTeam = nil
+		}
+
+		o.R.TeamIdTeamMembers = nil
+	}
+	return o.AddTeamIdTeamMembers(ctx, exec, insert, related...)
+}
+
+// RemoveTeamIdTeamMembers relationships from objects passed in.
+// Removes related items from R.TeamIdTeamMembers (uses pointer comparison, removal does not keep order)
+// Sets related.R.TeamIdTeam.
+func (o *Team) RemoveTeamIdTeamMembers(ctx context.Context, exec boil.ContextExecutor, related ...*TeamMember) error {
+	var err error
+	for _, rel := range related {
+		queries.SetScanner(&rel.TeamId, nil)
+		if rel.R != nil {
+			rel.R.TeamIdTeam = nil
+		}
+		if _, err = rel.Update(ctx, exec, boil.Whitelist("TeamId")); err != nil {
+			return err
+		}
+	}
+	if o.R == nil {
+		return nil
+	}
+
+	for _, rel := range related {
+		for i, ri := range o.R.TeamIdTeamMembers {
+			if rel != ri {
+				continue
+			}
+
+			ln := len(o.R.TeamIdTeamMembers)
+			if ln > 1 && i < ln-1 {
+				o.R.TeamIdTeamMembers[i] = o.R.TeamIdTeamMembers[ln-1]
+			}
+			o.R.TeamIdTeamMembers = o.R.TeamIdTeamMembers[:ln-1]
+			break
+		}
+	}
+
+	return nil
 }
 
 // Teams retrieves all the records using an executor.

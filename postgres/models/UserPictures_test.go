@@ -427,7 +427,7 @@ func testUserPicturesSelect(t *testing.T) {
 }
 
 var (
-	userPictureDBTypes = map[string]string{`ID`: `text`, `UserId`: `bigint`, `Base64`: `text`}
+	userPictureDBTypes = map[string]string{`ID`: `text`, `UserId`: `bigint`, `Content`: `text`}
 	_                  = bytes.MinRead
 )
 

@@ -48,6 +48,8 @@ func TestUpsert(t *testing.T) {
 
 	t.Run("LawOfFedSections", testLawOfFedSectionsUpsert)
 
+	t.Run("LawsOfFederations", testLawsOfFederationsUpsert)
+
 	t.Run("Licenses", testLicensesUpsert)
 
 	t.Run("NoteComments", testNoteCommentsUpsert)
