@@ -30,8 +30,8 @@ func (m *module) setupHttpRoutes(ctx context.Context) error {
 
 	m.server.AddMenuItem(web.MenuItem{
 		Href:      "/articles",
-		HyperText: "Articles",
-		Info:      "Artcles",
+		HyperText: "Legal Articles",
+		Info:      "Legal Artcles",
 		Icon:      "feather icon-package",
 	})
 

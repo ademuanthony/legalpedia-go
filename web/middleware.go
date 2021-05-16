@@ -39,3 +39,15 @@ func GetIDParamCtx(r *http.Request) string {
 	}
 	return chartAxisType
 }
+
+// getChartDataTypeCtx retrieves the ctxChartAxisType data from the request context.
+// If not set, the return value is an 0.
+func GetIntIDParamCtx(r *http.Request) int {
+	chartAxisType, ok := r.Context().Value(CtxChartDataType).(string)
+	if !ok {
+		log.Trace("chart axis type not set")
+		return 0
+	}
+	id, _ := strconv.Atoi(chartAxisType)
+	return id
+}

@@ -210,6 +210,10 @@ func (s *Server) StatusPage(w http.ResponseWriter, r *http.Request, code, messag
 }
 
 func GetPanitionInfo(r *http.Request) PagedResultRequest {
+	return GetPanitionInfoWithLimit(r, DefaultPageSize)
+}
+
+func GetPanitionInfoWithLimit(r *http.Request, defaultLimit int) PagedResultRequest {
 	page, _ := strconv.Atoi(r.FormValue("page"))
 	if page < 1 {
 		page = 1
@@ -217,7 +221,7 @@ func GetPanitionInfo(r *http.Request) PagedResultRequest {
 
 	pageSize, _ := strconv.Atoi(r.FormValue("limit"))
 	if pageSize < 1 {
-		pageSize = DefaultPageSize
+		pageSize = defaultLimit
 	}
 
 	offset := (page - 1) * pageSize

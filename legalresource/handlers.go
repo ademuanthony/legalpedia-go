@@ -1,4 +1,4 @@
-package dictionary
+package legalresource
 
 import (
 	"io"
@@ -11,24 +11,19 @@ import (
 func (m *module) indexPage(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
 
-	pageReq := web.GetPanitionInfoWithLimit(r, 32)
+	reqInput := web.GetPanitionInfo(r)
 	title := strings.ToUpper(r.FormValue("q"))
 
-	reqInput := FindRequest{
-		PagedResultRequest: pageReq,
-		Title:              title,
-	}
-
-	result, err := m.db.FindDictionaries(r.Context(), reqInput)
+	result, err := m.db.FindLegalResources(r.Context(), reqInput)
 	if err != nil {
 		log.Errorf("State execute failure: %v", err)
 		m.server.StatusPage(w, r, web.DefaultErrorCode, web.DefaultErrorMessage, "Unable to fetch data", web.ExpStatusError)
 		return
 	}
 
-	str, err := m.server.Templates.ExecTemplateToString("dictionary_index", struct {
+	str, err := m.server.Templates.ExecTemplateToString("legalresource/index", struct {
 		*web.CommonPageData
-		Items           []Dictionay
+		Items           []LegalResource
 		Page            web.PageInfo
 		PageTitle       string
 		SearchTerm      string
@@ -36,13 +31,13 @@ func (m *module) indexPage(w http.ResponseWriter, r *http.Request) {
 	}{
 		CommonPageData: m.server.CommonData(r),
 		Items:          result.Data,
-		Page: web.PaginationResponseInfo(result.TotalCount, pageReq.Page,
-			pageReq.PageSize, map[string]interface{}{"q": title}),
+		Page: web.PaginationResponseInfo(result.TotalCount, reqInput.Page,
+			reqInput.PageSize, map[string]interface{}{"q": title}),
 		SearchTerm: title,
-		PageTitle:  "Law Dictionary",
+		PageTitle:  "Foreign Legal Resources",
 		BreadcrumbItems: []web.BreadcrumbItem{
 			{
-				HyperText: "Law Dictionary",
+				HyperText: "Foreign Legal Resources",
 				Active:    true,
 			},
 		},
