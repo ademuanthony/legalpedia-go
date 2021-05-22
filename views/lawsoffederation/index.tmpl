@@ -1,7 +1,7 @@
-{{define "formspresedents/index"}}
+{{define "lawsoffederation/index"}}
 <!DOCTYPE html>
 <html lang="en">
-{{ template "html-head" printf .PageTitle}}
+{{ template "html-head" .PageTitle}}
 
 {{template "navbar" . }}
 {{template "header" . }}
@@ -20,13 +20,7 @@
                         </div>
                         <ul class="breadcrumb">
                             <li class="breadcrumb-item"><a href="/"><i class="feather icon-home"></i></a></li>
-                            {{ range $menuItem := .BreadcrumbItems }}
-                                {{ if $menuItem.Active }}
-                                <li class="breadcrumb-item active"><a href="{{$menuItem.Href}}">{{ $menuItem.HyperText }}</a></li>
-                                {{ else }}
-                                <li class="breadcrumb-item"><a href="{{$menuItem.Href}}">{{$menuItem.HyperText}}</a></li>
-                                {{ end }}
-                            {{ end }}
+                            <li class="breadcrumb-item"><a href="#!">{{ .PageTitle }}</a></li>
                         </ul>
                     </div>
                 </div>
@@ -44,17 +38,10 @@
                                 <form class="form-inline">
                                     <div class="input-group mb-2 mr-sm-2">
                                         <div class="input-group-prepend">
-                                            <div class="input-group-text">Category</div>
+                                            <div class="input-group-text">Year</div>
                                         </div>
-                                        <select name="state" class="form-control" style="max-width: 80%;"
-                                            data-action="change->rules#stateChanged" data-filter-is-by="state"
-                                            data-target="rules.state" data-initial-value="{{ .Category }}">
-                                            <option>All</option>
-                                            {{ $selectedCategory := .Category }}
-                                            {{ range $cat := .Categories }}
-                                            <option {{ if eq $cat $selectedCategory }} selected {{ end }}>{{ $cat }}</option>
-                                            {{ end }}
-                                        </select>
+                                        <input type="text" class="form-control" name="y" 
+                                        value="{{ .Year }}" placeholder="Year">
                                     </div>
 
                                     <div class="input-group mb-2 mr-sm-2">
@@ -83,15 +70,14 @@
                         </div>
                     </div>
                     <div class="card-body">
-                        <div class="tab-content" id="myTabContent">
-                            <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+                        <div class="row">
+                            <div class="col-md-12">
                                 <div data-target="article.body">
-                                    {{ range $art := .List }}
+                                    {{ range $art := .Items }}
                                     <div class="judgement-list">
                                         <p class="caseTitle">
-                                            <a href="/formspresedents/view/{{ trim $art.UUID }}">{{ $art.Title }}</a>
+                                            <a href="/lfn/{{ $art.ID }}">{{ $art.Title }}</a>
                                         </p>
-                                        <p>Category: <a href="?category={{$art.Category}}">{{$art.Category}}</a></p>
                                         <hr style="color:lightgray" />
                                     </div>
                                     {{ end }}
@@ -99,6 +85,7 @@
                                 <p class="text-danger" data-target="article.noResult"></p>
                             </div>
                         </div>
+
                     </div>
                 </div>
             </div>

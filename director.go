@@ -7,6 +7,7 @@ import (
 	"github.com/ademuanthony/legalpedia/dictionary"
 	"github.com/ademuanthony/legalpedia/formsandprecedents"
 	"github.com/ademuanthony/legalpedia/homepage"
+	"github.com/ademuanthony/legalpedia/lawsoffederation"
 	"github.com/ademuanthony/legalpedia/legalresource"
 	"github.com/ademuanthony/legalpedia/maxim"
 	"github.com/ademuanthony/legalpedia/postgres"
@@ -58,6 +59,11 @@ func setupModules(ctx context.Context, cfg *config, server *web.Server) error {
 	}
 
 	if err = legalresource.Activate(ctx, pgDb, server); err != nil {
+		log.Error(err)
+		return err
+	}
+
+	if err = lawsoffederation.Activate(ctx, pgDb, server); err != nil {
 		log.Error(err)
 		return err
 	}

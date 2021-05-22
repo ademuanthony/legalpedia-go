@@ -1,8 +1,9 @@
-package maxim
+package lawsoffederation
 
 import (
 	"io"
 	"net/http"
+	"strconv"
 	"strings"
 
 	"github.com/ademuanthony/legalpedia/web"
@@ -13,25 +14,28 @@ func (m *module) indexPage(w http.ResponseWriter, r *http.Request) {
 
 	pageReq := web.GetPanitionInfo(r)
 	title := strings.ToUpper(r.FormValue("q"))
+	year, _ := strconv.Atoi(r.FormValue("y"))
 
 	reqInput := FindRequest{
 		PagedResultRequest: pageReq,
 		Title:              title,
+		Year:               year,
 	}
 
-	result, err := m.db.FindMaximes(r.Context(), reqInput)
+	result, err := m.db.GetAllLawsOfFederation(r.Context(), reqInput)
 	if err != nil {
 		log.Errorf("State execute failure: %v", err)
 		m.server.StatusPage(w, r, web.DefaultErrorCode, web.DefaultErrorMessage, "Unable to fetch data", web.ExpStatusError)
 		return
 	}
 
-	str, err := m.server.Templates.ExecTemplateToString("dictionary_index", struct {
+	str, err := m.server.Templates.ExecTemplateToString("lawsoffederation/index", struct {
 		*web.CommonPageData
-		Items           []Maxim
+		Items           []LawsOfFederation
 		Page            web.PageInfo
 		PageTitle       string
 		SearchTerm      string
+		Year            string
 		BreadcrumbItems []web.BreadcrumbItem
 	}{
 		CommonPageData: m.server.CommonData(r),
@@ -39,10 +43,11 @@ func (m *module) indexPage(w http.ResponseWriter, r *http.Request) {
 		Page: web.PaginationResponseInfo(result.TotalCount, pageReq.Page,
 			pageReq.PageSize, map[string]interface{}{"q": title}),
 		SearchTerm: title,
-		PageTitle:  "Legal MAxims",
+		Year:       r.FormValue("y"),
+		PageTitle:  "Laws of Federation",
 		BreadcrumbItems: []web.BreadcrumbItem{
 			{
-				HyperText: "Legal Maxims",
+				HyperText: "Laws of Federation",
 				Active:    true,
 			},
 		},
@@ -60,4 +65,7 @@ func (m *module) indexPage(w http.ResponseWriter, r *http.Request) {
 	if _, err = io.WriteString(w, str); err != nil {
 		log.Error(err)
 	}
+}
+
+func (m *module) detailPage(w http.ResponseWriter, r *http.Request) {
 }

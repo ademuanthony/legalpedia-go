@@ -1,4 +1,4 @@
-package maxim
+package lawsoffederation
 
 import (
 	"context"
