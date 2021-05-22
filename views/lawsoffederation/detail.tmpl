@@ -1,7 +1,7 @@
 {{define "lawsoffederation/detail"}}
 <!DOCTYPE html>
 <html lang="en">
-{{ template "html-head" printf }}
+{{ template "html-head" .PageTitle }}
 
 {{template "navbar" . }}
 {{template "header" . }}
@@ -16,11 +16,11 @@
                 <div class="row align-items-center">
                     <div class="col-md-12">
                         <div class="page-header-title">
-                            <h5 class="m-b-10">{{ .Article.Title }}</h5>
+                            <h5 class="m-b-10">{{ .PageTitle }}</h5>
                         </div>
                         <ul class="breadcrumb">
                             <li class="breadcrumb-item"><a href="/"><i class="feather icon-home"></i></a></li>
-                            <li class="breadcrumb-item"><a href="/articles">Articles</a></li>
+                            <li class="breadcrumb-item"><a href="/lfn">Laws of Federation</a></li>
                             <li class="breadcrumb-item"><a href="#!">Read</a></li>
                         </ul>
                     </div>
@@ -36,7 +36,41 @@
                     <div class="card-body">
                         <div class="row">
                             <div class="col-md-12">
-                                {{ rawHTML .Article.Content }}
+                                
+                                <div>
+                                    <div class="text-center">
+                                        <h2 style="color:#990033; font-size:24px; text-align:center; margin: 0 5px 0 1px;">{{ .Law.Title }}</h2>
+                                        <p>
+                                            {{ if neq .Law.LawNo "" }}
+                                            <span class="court">{{ .Law.LawNo }}</span>
+                                            {{ end }}
+                                            <span class="date">{{ formatDate .Law.LawDate }}</span>
+                                        </p>
+                                    </div>
+                                    {{ $lawCount := len .Law.Parts }}
+                                    {{ range $part := .Law.Parts }}
+                                        {{ if gt $lawCount 1 }}
+                                            <h4>{{ $part.PartHeader }}</h4>
+                                            <hr class="underline" />
+                                        {{ end }}
+                                        {{ range $lawSection := $part.Sections }}
+                                            <div>
+                                                <h5 class="case-detail-label">{{ $lawSection.SectionHeader }}</h5>
+                                                <p class="case-detail-text">{{ rawHTML (addLinebreaks $lawSection.SectionBody) }}</p>
+                                            </div>
+                                        {{ end }}
+                                    {{ end }}
+                                
+                                    {{ if gt (len .Law.Schedules) 0 }}
+                                        {{ range $schedule := .Law.Schedules}}
+                                            <div>
+                                                <h5 class="case-detail-label">{{ $schedule.SchedHeader }}</h5>
+                                                <p class="case-detail-text">{{ rawHTML (addLinebreaks $schedule.SchedBody) }}</p>
+                                            </div>
+                                        {{ end }}
+                                    {{ end }}
+                                </div>
+
                             </div>
                         </div>
                     </div>

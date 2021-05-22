@@ -275,6 +275,13 @@ func MakeTemplateFuncMap(params *chaincfg.Params) template.FuncMap {
 		"rawHTML": func (input string) template.HTML {
 			return template.HTML(input)
 		},
+		"addLinebreaks": func (input string) string {
+			input = strings.Replace(input, "\r\n", "<br/>", -1)
+			return input
+		},
+		"formatDate": func (d time.Time) string {
+			return d.Format("")
+		},
 		"add": func(args ...int64) int64 {
 			var sum int64
 			for _, a := range args {

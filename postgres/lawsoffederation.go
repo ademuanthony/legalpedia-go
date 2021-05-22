@@ -7,6 +7,7 @@ import (
 
 	lfn "github.com/ademuanthony/legalpedia/lawsoffederation"
 	"github.com/ademuanthony/legalpedia/postgres/models"
+	"github.com/volatiletech/null/v8"
 	"github.com/volatiletech/sqlboiler/v4/queries/qm"
 )
 
@@ -65,5 +66,66 @@ func (pg *PgDb) GetAllLawsOfFederation(ctx context.Context, req lfn.FindRequest)
 }
 
 func (pg *PgDb) GetLawDetails(ctx context.Context, id int) (*lfn.LawDetail, error) {
-	return nil, nil
+	var lawDetail = &lfn.LawDetail{}
+
+	data, err := models.LawsOfFederations(models.LawsOfFederationWhere.ID.EQ(id)).One(ctx, pg.db)
+	if err != nil {
+		return nil, err
+	}
+
+	lawDetail.CatId = data.CatId.Int
+	lawDetail.CreatedAt = data.CreatedAt.Time
+	lawDetail.Descr = data.Descr.String
+	lawDetail.ID = data.ID
+	lawDetail.LawDate = data.LawDate.Time
+	lawDetail.LawNo = data.LawNo.String
+	lawDetail.Title = data.Title.String
+	lawDetail.SubsidiaryLegislation = data.SubsidiaryLegislation.String
+	lawDetail.Tags = data.Tags.String
+	lawDetail.UpdatedAt = data.UpdatedAt.Time
+
+	parts, err := models.LawOfFedParts(models.LawOfFedPartWhere.LawId.EQ(null.IntFrom(id))).All(ctx, pg.db)
+	if err != nil {
+		return nil, err
+	}
+
+	for _, p := range parts {
+		var part = lfn.Part{
+			ID: p.ID,
+			PartHeader: p.PartHeader.String,
+			LawId: p.LawId.Int,
+		}
+
+		sections, err := models.LawOfFedSections(models.LawOfFedSectionWhere.LawId.EQ(null.IntFrom(id))).All(ctx, pg.db)
+		if err != nil {
+			return nil, err
+		}
+
+		for _, s := range sections {
+			part.Sections = append(part.Sections, lfn.Section{
+				ID: s.ID,
+				LawId: s.LawId.Int,
+				SectionHeader: s.SectionBody.String,
+				SectionBody: s.SectionBody.String,
+			})
+		}
+
+		lawDetail.Parts = append(lawDetail.Parts, part)
+	}
+
+	schedules, err := models.LawOfFedScheds(models.LawOfFedSchedWhere.LawId.EQ(null.IntFrom(id))).All(ctx, pg.db)
+	if err != nil {
+		return nil, err
+	}
+
+	for _, s := range schedules {
+		lawDetail.Schedules = append(lawDetail.Schedules, lfn.Schedule{
+			ID: s.ID,
+			LawId: s.LawId.Int,
+			SchedHeader: s.SchedHeader.String,
+			SchedBody: s.SchedBody.String,
+		})
+	}
+
+	return lawDetail, nil
 }

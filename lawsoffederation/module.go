@@ -26,7 +26,7 @@ func (m *module) setupHTTP() error {
 
 	// page routes
 	m.server.AddRoute("/lfn", web.GET, m.indexPage)
-	m.server.AddRoute("/lfn/{id}", web.GET, m.detailPage)
+	m.server.AddRoute("/lfn/{id}", web.GET, m.detailPage, web.IDParamCtx)
 
 	m.server.AddMenuItem(web.MenuItem{
 		Href:      "/lfn",
